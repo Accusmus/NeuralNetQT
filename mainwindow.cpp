@@ -518,7 +518,7 @@ void MainWindow::on_pushButton_Classify_Test_Pattern_clicked()
 
     ui->lcdNumber_A->display(classificationResults[0]);
     ui->lcdNumber_B->display(classificationResults[1]);
-    ui->lcdNumber_unknown->display(classificationResults[2]);
+    ui->lcdNumber_C->display(classificationResults[2]);
 
 
     //-----------------------------------------------------------
