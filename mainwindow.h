@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDataStream>
+#include <QVector>
 //-----------------------
 #include "backpropagation.h"
 
@@ -25,6 +26,8 @@ public:
     ~MainWindow();
 
 private slots:
+    void on_pushButton_Shuffle_Data_clicked();
+
     void on_pushButton_Read_File_clicked();
 
     void on_horizScrollBar_LearningRate_valueChanged(int value);

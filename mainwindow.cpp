@@ -45,10 +45,80 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::on_pushButton_Shuffle_Data_clicked()
+{
+    QString lineOfData, msg;
+
+    QString readFileName = "complete_data_set.txt";
+    QString saveFileName = "complete_data_set_shuffled.txt";
+
+    QVector<QString> data;
+
+    lineOfData = "Reading file " + readFileName + "for shuffling\n";
+    msg.append(lineOfData);
+
+     QFile file(readFileName);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        qDebug() << "Data file does not exist!";
+        lineOfData = "File " + readFileName + " does not exist!\n";
+        msg.append(lineOfData);
+        return;
+    }
+
+    QTextStream in(&file);
+    QString line = in.readLine();
+    while(!line.isNull()){
+        line = in.readLine();
+        data.push_back(line);
+    }
+
+    lineOfData.sprintf("Number of data points to shuffle: %d\n", data.size());
+    msg.append(lineOfData);
+    file.close();
+
+    int same = 10000;
+    while(same > 0){
+        same = 0;
+        for(int i = 0; i < data.size()-1; i++){
+            if(data[i][0] == data[i+1][0]){
+                QString temp;
+                temp = data[i];
+                data[i] = data[0];
+                data[0] = temp;
+                same ++;
+            }
+        }
+        lineOfData.sprintf("Number of repeating examples: %d\n", same);
+        msg.append(lineOfData);
+    }
+
+    qDebug() << "File has been shuffled";
+    lineOfData = "File has been shuffled\n";
+    msg.append(lineOfData);
+
+    QFile wFile(saveFileName);
+    if(!wFile.open(QIODevice::WriteOnly | QIODevice::Text)){
+        qDebug() << "Something went wrong shuffling the data!";
+        return;
+    }
+
+    QTextStream out(&wFile);
+    for(QString i : data){
+        out << i << "\n";
+    }
+    wFile.close();
+
+    lineOfData = "Wrote Results to: " + saveFileName;
+    msg.append(lineOfData);
+
+    ui->plainTextEdit_results->setPlainText(msg);
+    qApp->processEvents();
+}
+
 void MainWindow::on_pushButton_Read_File_clicked()
 {
     qDebug() << "\nReading file...";
-    QFile file("complete_data_set.txt");
+    QFile file("complete_data_set_shuffled.txt");
     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
     if(!file.exists()){
