@@ -339,7 +339,6 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
     int epochs=0;
     err = 0.0;
     while (1) {
-
         if (++sample == NUMBER_OF_TRAINING_PATTERNS) {
             sample = 0;
             err = 0.0;
