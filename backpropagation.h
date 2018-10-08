@@ -29,10 +29,13 @@ public:
     void feedForward( );
     void backPropagate();
     double sigmoid( double val );
+    double softmax(double val, double total);
     double sigmoidDerivative( double val );
     void assignRandomWeights( void );
     double trainNetwork(int NUMBER_OF_DESIRED_EPOCHS);
     double getError_SSE();
+    double getError_RMSE();
+    double getError_MSE();
     int action( double *vector );
     double* testNetwork(LetterStructure testPattern);
 
@@ -57,7 +60,7 @@ private:
     double errh[HIDDEN_NEURONS];
 
     //-----------------------------------------
-    double err;
+    double sse, rmse, mse, mae;
     int i, sample, iterations;
     int sum;
 };

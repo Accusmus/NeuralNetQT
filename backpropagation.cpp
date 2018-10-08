@@ -22,7 +22,10 @@ Backpropagation::Backpropagation()
 
 void Backpropagation::initialise()
 {
-    err=0;
+    sse=0;
+    rmse=0;
+    mse=0;
+    mae=0;
     sample=0;
     iterations=0;
     sum = 0;
@@ -35,7 +38,15 @@ void Backpropagation::initialise()
 }
 
 double Backpropagation::getError_SSE(){
-    return err;
+    return sse;
+}
+
+double Backpropagation::getError_RMSE(){
+    return rmse;
+}
+
+double Backpropagation::getError_MSE(){
+    return mse;
 }
 
 
@@ -297,7 +308,6 @@ int Backpropagation::action( double *vector )
       max = vector[index]; sel = index;
     }
   }
-
   return( sel );
 }
 
@@ -334,14 +344,25 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
         qDebug() << "unable to train network, no training patterns loaded.";
         return -999.99;
     }
-    double accumulatedErr=0.0;
+    double accumulatedSSE=0.0;
     iterations=0;
     int epochs=0;
-    err = 0.0;
+
+    //initialise error counters
+    sse = 0.0;
+    rmse = 0.0;
+    double mse_count = 0.0;
+    mse = 0.0;
+    mae = 0.0;
+
     while (1) {
         if (++sample == NUMBER_OF_TRAINING_PATTERNS) {
             sample = 0;
-            err = 0.0;
+            sse = 0.0;
+            rmse = 0.0;
+            mse_count = 0.0;
+            mse = 0.0;
+            mae = 0.0;
             epochs++;
         }
 
@@ -360,13 +381,18 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
 
         //err = 0.0;
         for (int k = 0 ; k < OUTPUT_NEURONS ; k++) {
-
-          err += sqr( (letters[sample].outputs[k] - actual[k]) );
+            sse += sqr( (letters[sample].outputs[k] - actual[k]) );
+            mse_count += sqr( (letters[sample].outputs[k] - actual[k]) );
         }
 
-        err = 0.5 * err;
+        sse = 0.5 * sse;
 
-        accumulatedErr = accumulatedErr + err;
+        mse = mse_count / sample;
+        //qDebug() << "sample: " << sample << " sse " << sse << " mse " << mse;
+
+
+
+        accumulatedSSE = accumulatedSSE + sse;
 
         if(epochs > NUMBER_OF_DESIRED_EPOCHS) {
 
@@ -377,7 +403,7 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
 
       }
       qDebug() << "training complete.";
-      return accumulatedErr;
+      return accumulatedSSE;
 }
 
 
@@ -434,6 +460,11 @@ double Backpropagation::sigmoidDerivative( double val )
   return ( val * (1.0 - val) );
 }
 
+double Backpropagation::softmax(double val, double total)
+{
+    return (exp(val)/total);
+}
+
 
 /*
  *  feedForward()
@@ -461,7 +492,8 @@ void Backpropagation::feedForward( )
     hidden[hid] = sigmoid( sum );
 
   }
-
+  float total = 0;
+  float sums[OUTPUT_NEURONS];
   /* Calculate the hidden to output layer */
   for (out = 0 ; out < OUTPUT_NEURONS ; out++) {
 
@@ -473,10 +505,14 @@ void Backpropagation::feedForward( )
     /* Add in Bias */
     sum += who[HIDDEN_NEURONS][out];
 
-    actual[out] = sigmoid( sum );
+    total += exp(sum);
+    sums[out] = sum;
+    //actual[out] = sigmoid( sum );
 
   }
-
+  for(int i = 0; i < OUTPUT_NEURONS; i++){
+      actual[i] = softmax(sums[i],total);
+  }
 }
 
 
