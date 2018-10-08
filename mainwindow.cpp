@@ -167,9 +167,7 @@ void MainWindow::on_pushButton_Read_File_clicked()
             letters[i].symbol = LETTER_C;
             setOutputsToZero(letters[i].outputs, 26, LETTER_C);
             counterForLetter[LETTER_C]++;
-
         }else if(characterSymbol == 'D'){
-
             letters[i].symbol = LETTER_D;
             setOutputsToZero(letters[i].outputs, 26, LETTER_D);
             counterForLetter[LETTER_D]++;
@@ -697,101 +695,100 @@ void MainWindow::on_pushButton_Test_All_Patterns_clicked()
                 testPattern.f[j] = letters[i].f[j];
             }
 
-            if(characterSymbol == 'A'){
+            if(characterSymbol == LETTER_A){
                 testPattern.symbol = LETTER_A;
                 setOutputsToZero(testPattern.outputs,26,LETTER_A);
-            }else if(characterSymbol == 'B'){
+            }else if(characterSymbol == LETTER_B){
                 testPattern.symbol = LETTER_B;
                 setOutputsToZero(testPattern.outputs,26,LETTER_B);
-            }else if(characterSymbol == 'C'){
+            }else if(characterSymbol == LETTER_C){
                 testPattern.symbol = LETTER_C;
                 setOutputsToZero(testPattern.outputs,26,LETTER_C);
-            }else if(characterSymbol == 'D'){
+            }else if(characterSymbol == LETTER_D){
                 testPattern.symbol = LETTER_D;
                 setOutputsToZero(testPattern.outputs,26,LETTER_D);
-            }else if(characterSymbol == 'E'){
+            }else if(characterSymbol == LETTER_E){
                 testPattern.symbol = LETTER_E;
                 setOutputsToZero(testPattern.outputs,26,LETTER_E);
-            }else if(characterSymbol == 'F'){
+            }else if(characterSymbol == LETTER_F){
                 testPattern.symbol = LETTER_F;
                 setOutputsToZero(testPattern.outputs,26,LETTER_F);
-            }else if(characterSymbol == 'G'){
+            }else if(characterSymbol == LETTER_G){
                 testPattern.symbol = LETTER_G;
                 setOutputsToZero(testPattern.outputs,26,LETTER_G);
-            }else if(characterSymbol == 'H'){
+            }else if(characterSymbol == LETTER_H){
                 testPattern.symbol = LETTER_H;
                 setOutputsToZero(testPattern.outputs,26,LETTER_H);
-            }else if(characterSymbol == 'I'){
+            }else if(characterSymbol == LETTER_I){
                 testPattern.symbol = LETTER_I;
                 setOutputsToZero(testPattern.outputs,26,LETTER_I);
-            }else if(characterSymbol == 'J'){
+            }else if(characterSymbol == LETTER_J){
                 testPattern.symbol = LETTER_J;
                 setOutputsToZero(testPattern.outputs,26,LETTER_J);
-            }else if(characterSymbol == 'K'){
+            }else if(characterSymbol == LETTER_K){
                 testPattern.symbol = LETTER_K;
                 setOutputsToZero(testPattern.outputs,26,LETTER_K);
-            }else if(characterSymbol == 'L'){
+            }else if(characterSymbol == LETTER_L){
                 testPattern.symbol = LETTER_L;
                 setOutputsToZero(testPattern.outputs,26,LETTER_L);
-            }else if(characterSymbol == 'M'){
+            }else if(characterSymbol == LETTER_M){
                 testPattern.symbol = LETTER_M;
                 setOutputsToZero(testPattern.outputs,26,LETTER_M);
-            }else if(characterSymbol == 'N'){
+            }else if(characterSymbol == LETTER_N){
                 testPattern.symbol = LETTER_N;
                 setOutputsToZero(testPattern.outputs,26,LETTER_N);
-            }else if(characterSymbol == 'O'){
+            }else if(characterSymbol == LETTER_O){
                 testPattern.symbol = LETTER_O;
                 setOutputsToZero(testPattern.outputs,26,LETTER_O);
-            }else if(characterSymbol == 'P'){
+            }else if(characterSymbol == LETTER_P){
                 testPattern.symbol = LETTER_P;
                 setOutputsToZero(testPattern.outputs,26,LETTER_P);
-            }else if(characterSymbol == 'Q'){
+            }else if(characterSymbol == LETTER_Q){
                 testPattern.symbol = LETTER_Q;
                 setOutputsToZero(testPattern.outputs,26,LETTER_Q);
-            }else if(characterSymbol == 'R'){
+            }else if(characterSymbol == LETTER_R){
                 testPattern.symbol = LETTER_R;
                 setOutputsToZero(testPattern.outputs,26,LETTER_R);
-            }else if(characterSymbol == 'S'){
+            }else if(characterSymbol == LETTER_S){
                 testPattern.symbol = LETTER_S;
                 setOutputsToZero(testPattern.outputs,26,LETTER_S);
-            }else if(characterSymbol == 'T'){
+            }else if(characterSymbol == LETTER_T){
                 testPattern.symbol = LETTER_T;
                 setOutputsToZero(testPattern.outputs,26,LETTER_T);
-            }else if(characterSymbol == 'U'){
+            }else if(characterSymbol == LETTER_U){
                 testPattern.symbol = LETTER_U;
                 setOutputsToZero(testPattern.outputs,26,LETTER_U);
-            }else if(characterSymbol == 'V'){
+            }else if(characterSymbol == LETTER_V){
                 testPattern.symbol = LETTER_V;
                 setOutputsToZero(testPattern.outputs,26,LETTER_V);
-            }else if(characterSymbol == 'W'){
+            }else if(characterSymbol == LETTER_W){
                 testPattern.symbol = LETTER_W;
                 setOutputsToZero(testPattern.outputs,26,LETTER_W);
-            }else if(characterSymbol == 'X'){
+            }else if(characterSymbol == LETTER_X){
                 testPattern.symbol = LETTER_X;
                 setOutputsToZero(testPattern.outputs,26,LETTER_X);
-            }else if(characterSymbol == 'Y'){
+            }else if(characterSymbol == LETTER_Y){
                 testPattern.symbol = LETTER_Y;
                 setOutputsToZero(testPattern.outputs,26,LETTER_Y);
-            }else if(characterSymbol == 'Z'){
+            }else if(characterSymbol == LETTER_Z){
                 testPattern.symbol = LETTER_Z;
                 setOutputsToZero(testPattern.outputs,26,LETTER_Z);
             }
-
-
 
             //---------------------------------
             classificationResults = bp->testNetwork(testPattern);
 
             for(int k=0; k < OUTPUT_NEURONS; k++){
-               outputs[k] = testPattern.outputs[k];
+                if(testPattern.outputs[k] == 1){
+                    outputs[k] = 1;
+                }else{
+                    outputs[k] = 0;
+                }
             }
 
             if (bp->action(classificationResults) == bp->action(outputs)) {
                  correctClassifications++;
-
             }
-
-
         }
 
 
@@ -845,24 +842,84 @@ void MainWindow::on_pushButton_testNetOnTrainingSet_clicked()
                 testPattern.f[j] = letters[i].f[j];
             }
 
-            if(characterSymbol == 'A'){
+            if(characterSymbol == LETTER_A){
                 testPattern.symbol = LETTER_A;
-                testPattern.outputs[0] = 1;
-                testPattern.outputs[1] = 0;
-                testPattern.outputs[2] = 0;
-
-            } else if(characterSymbol == 'B'){
+                setOutputsToZero(testPattern.outputs,26,LETTER_A);
+            }else if(characterSymbol == LETTER_B){
                 testPattern.symbol = LETTER_B;
-                testPattern.outputs[0] = 0;
-                testPattern.outputs[1] = 1;
-                testPattern.outputs[2] = 0;
-
-            } else {
+                setOutputsToZero(testPattern.outputs,26,LETTER_B);
+            }else if(characterSymbol == LETTER_C){
                 testPattern.symbol = LETTER_C;
-                testPattern.outputs[0] = 0;
-                testPattern.outputs[1] = 0;
-                testPattern.outputs[2] = 1;
-
+                setOutputsToZero(testPattern.outputs,26,LETTER_C);
+            }else if(characterSymbol == LETTER_D){
+                testPattern.symbol = LETTER_D;
+                setOutputsToZero(testPattern.outputs,26,LETTER_D);
+            }else if(characterSymbol == LETTER_E){
+                testPattern.symbol = LETTER_E;
+                setOutputsToZero(testPattern.outputs,26,LETTER_E);
+            }else if(characterSymbol == LETTER_F){
+                testPattern.symbol = LETTER_F;
+                setOutputsToZero(testPattern.outputs,26,LETTER_F);
+            }else if(characterSymbol == LETTER_G){
+                testPattern.symbol = LETTER_G;
+                setOutputsToZero(testPattern.outputs,26,LETTER_G);
+            }else if(characterSymbol == LETTER_H){
+                testPattern.symbol = LETTER_H;
+                setOutputsToZero(testPattern.outputs,26,LETTER_H);
+            }else if(characterSymbol == LETTER_I){
+                testPattern.symbol = LETTER_I;
+                setOutputsToZero(testPattern.outputs,26,LETTER_I);
+            }else if(characterSymbol == LETTER_J){
+                testPattern.symbol = LETTER_J;
+                setOutputsToZero(testPattern.outputs,26,LETTER_J);
+            }else if(characterSymbol == LETTER_K){
+                testPattern.symbol = LETTER_K;
+                setOutputsToZero(testPattern.outputs,26,LETTER_K);
+            }else if(characterSymbol == LETTER_L){
+                testPattern.symbol = LETTER_L;
+                setOutputsToZero(testPattern.outputs,26,LETTER_L);
+            }else if(characterSymbol == LETTER_M){
+                testPattern.symbol = LETTER_M;
+                setOutputsToZero(testPattern.outputs,26,LETTER_M);
+            }else if(characterSymbol == LETTER_N){
+                testPattern.symbol = LETTER_N;
+                setOutputsToZero(testPattern.outputs,26,LETTER_N);
+            }else if(characterSymbol == LETTER_O){
+                testPattern.symbol = LETTER_O;
+                setOutputsToZero(testPattern.outputs,26,LETTER_O);
+            }else if(characterSymbol == LETTER_P){
+                testPattern.symbol = LETTER_P;
+                setOutputsToZero(testPattern.outputs,26,LETTER_P);
+            }else if(characterSymbol == LETTER_Q){
+                testPattern.symbol = LETTER_Q;
+                setOutputsToZero(testPattern.outputs,26,LETTER_Q);
+            }else if(characterSymbol == LETTER_R){
+                testPattern.symbol = LETTER_R;
+                setOutputsToZero(testPattern.outputs,26,LETTER_R);
+            }else if(characterSymbol == LETTER_S){
+                testPattern.symbol = LETTER_S;
+                setOutputsToZero(testPattern.outputs,26,LETTER_S);
+            }else if(characterSymbol == LETTER_T){
+                testPattern.symbol = LETTER_T;
+                setOutputsToZero(testPattern.outputs,26,LETTER_T);
+            }else if(characterSymbol == LETTER_U){
+                testPattern.symbol = LETTER_U;
+                setOutputsToZero(testPattern.outputs,26,LETTER_U);
+            }else if(characterSymbol == LETTER_V){
+                testPattern.symbol = LETTER_V;
+                setOutputsToZero(testPattern.outputs,26,LETTER_V);
+            }else if(characterSymbol == LETTER_W){
+                testPattern.symbol = LETTER_W;
+                setOutputsToZero(testPattern.outputs,26,LETTER_W);
+            }else if(characterSymbol == LETTER_X){
+                testPattern.symbol = LETTER_X;
+                setOutputsToZero(testPattern.outputs,26,LETTER_X);
+            }else if(characterSymbol == LETTER_Y){
+                testPattern.symbol = LETTER_Y;
+                setOutputsToZero(testPattern.outputs,26,LETTER_Y);
+            }else if(characterSymbol == LETTER_Z){
+                testPattern.symbol = LETTER_Z;
+                setOutputsToZero(testPattern.outputs,26,LETTER_Z);
             }
 
             //---------------------------------
