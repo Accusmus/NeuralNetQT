@@ -36,6 +36,7 @@ public:
     double getError_SSE();
     double getError_RMSE();
     double getError_MSE();
+    double getError_PG();
     int action( double *vector );
     double* testNetwork(LetterStructure testPattern);
 
@@ -60,7 +61,7 @@ private:
     double errh[HIDDEN_NEURONS];
 
     //-----------------------------------------
-    double sse, rmse, mse, mae;
+    double sse, rmse, mse, mae, pgood;
     int i, sample, iterations;
     int sum;
 };

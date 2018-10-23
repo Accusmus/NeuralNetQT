@@ -50,6 +50,8 @@ private slots:
 
     void on_horizScrollBar_LearningRate_actionTriggered(int action);
 
+    void on_spinBox_training_Epochs_valueChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     //-------------------------

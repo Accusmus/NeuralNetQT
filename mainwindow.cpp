@@ -656,9 +656,10 @@ void MainWindow::on_pushButton_Train_Network_Max_Epochs_clicked()
       qApp->processEvents();
       ui->lcdNumber_MSE->display(bp->getError_MSE());
       qApp->processEvents();
+      ui->lcdNumber_percentageOfGoodClassification->display(bp->getError_PG());
+      qApp->processEvents();
 
       update();
-      qDebug() << "epoch: " << i << ", MSE = " << bp->getError_MSE();
 
       if(i % 5 ==0){
          bp->saveWeights(ui->plainTextEdit_saveWeightsAs->toPlainText());

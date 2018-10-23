@@ -26,6 +26,7 @@ void Backpropagation::initialise()
     rmse=0;
     mse=0;
     mae=0;
+    pgood=0;
     sample=0;
     iterations=0;
     sum = 0;
@@ -47,6 +48,10 @@ double Backpropagation::getError_RMSE(){
 
 double Backpropagation::getError_MSE(){
     return mse;
+}
+
+double Backpropagation::getError_PG(){
+    return pgood;
 }
 
 
@@ -350,19 +355,12 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
 
     //initialise error counters
     sse = 0.0;
-    rmse = 0.0;
-    double mse_count = 0.0;
     mse = 0.0;
-    mae = 0.0;
 
     while (1) {
         if (++sample == NUMBER_OF_TRAINING_PATTERNS) {
             sample = 0;
             sse = 0.0;
-            rmse = 0.0;
-            mse_count = 0.0;
-            mse = 0.0;
-            mae = 0.0;
             epochs++;
         }
 
@@ -379,20 +377,18 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
 
         /* need to iterate through all ... */
 
-        //err = 0.0;
+
         for (int k = 0 ; k < OUTPUT_NEURONS ; k++) {
-            sse += sqr( (letters[sample].outputs[k] - actual[k]) );
-            mse_count += sqr( (letters[sample].outputs[k] - actual[k]) );
+            sse += sqr( (letters[sample].outputs[k] - actual[k]));
+            mse += (letters[sample].outputs[k] - actual[k]) * (letters[sample].outputs[k] - actual[k]);
         }
 
         sse = 0.5 * sse;
-
-        mse = mse_count / sample;
-        //qDebug() << "sample: " << sample << " sse " << sse << " mse " << mse;
-
+        mse = (1/(sample+1)) * mse;
 
 
         accumulatedSSE = accumulatedSSE + sse;
+
 
         if(epochs > NUMBER_OF_DESIRED_EPOCHS) {
 
@@ -447,6 +443,11 @@ double Backpropagation::sigmoid( double val )
   return (1.0 / (1.0 + exp(-val)));
 }
 
+double Backpropagation::softmax(double val, double total)
+{
+    return (exp(val)/total);
+}
+
 
 /*
  *  sigmoidDerivative()
@@ -460,10 +461,7 @@ double Backpropagation::sigmoidDerivative( double val )
   return ( val * (1.0 - val) );
 }
 
-double Backpropagation::softmax(double val, double total)
-{
-    return (exp(val)/total);
-}
+
 
 
 /*
