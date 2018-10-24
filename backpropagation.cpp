@@ -91,7 +91,7 @@ void Backpropagation::printConfusionMatrix(){
 }
 
 
-////for debugging - very good
+//////for debugging - very good
 //void Backpropagation::saveWeights(){
 //    int out, hid, inp;
 
@@ -178,7 +178,7 @@ void Backpropagation::saveWeights(QString fileName){
 
     QTextStream out3(&file3);
 
-    char tempBuffer3[80];
+    char tempBuffer3[10000];
     QByteArray temp3;
 
     //----------------------------------------------

@@ -359,6 +359,8 @@ void MainWindow::on_pushButton_Read_File_clicked()
             msg.append(lineOfData);
             lineOfData.sprintf("number of patterns for Letter Z = %d\n", counterForLetter[LETTER_Z]);
             msg.append(lineOfData);
+
+            ui->plainTextEdit_results->setPlainText(msg);
         }
         i++;
     }
