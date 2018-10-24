@@ -62,7 +62,7 @@ void Backpropagation::resetConfusionMatrix(){
     }
 }
 
-void Backpropagation::printConfusionMatrix(){
+void Backpropagation::logConfusionMatrixToFile(){
 
     QFile file4("../Assignment2/confusion_matrix.csv");
     file4.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -178,7 +178,7 @@ void Backpropagation::saveWeights(QString fileName){
 
     QTextStream out3(&file3);
 
-    char tempBuffer3[10000];
+    char tempBuffer3[1000000];
     QByteArray temp3;
 
     //----------------------------------------------
@@ -261,7 +261,7 @@ void Backpropagation::loadWeights(QString fileName){
     QTextStream in(&file3);
 
     char tChar;
-    char tempBuffer3[80];
+    char tempBuffer3[1000000];
     QByteArray temp3;
 
     //----------------------------------------------
@@ -444,13 +444,12 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
         percentCorrect = correct / NUMBER_OF_TRAINING_PATTERNS;
         pgood = correctGood / NUMBER_OF_TRAINING_PATTERNS;
 
-
         accumulatedSSE = accumulatedSSE + sse;
 
         if(sample == 1){
             correct = 0;
             correctGood = 0;
-            printConfusionMatrix();
+            logConfusionMatrixToFile();
             resetConfusionMatrix();
         }
 

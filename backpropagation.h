@@ -61,7 +61,7 @@ private:
     double errh[HIDDEN_NEURONS];
 
     void resetConfusionMatrix();
-    void printConfusionMatrix();
+    void logConfusionMatrixToFile();
 
     //-----------------------------------------
     double sse, mse, percentCorrect, pgood;

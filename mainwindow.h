@@ -56,6 +56,8 @@ private:
     Ui::MainWindow *ui;
     //-------------------------
     Backpropagation *bp;
+
+    void logEpochInfoToFile(int epoch, double pg, double mse);
 };
 
 #endif // MAINWINDOW_H

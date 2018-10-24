@@ -45,6 +45,36 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::logEpochInfoToFile(int epoch, double pg, double mse){
+    if(epoch == 0){
+        QFile file("../Assignment2/epoch_log.csv");
+        if(file.open(QIODevice::WriteOnly)){
+            QTextStream out(&file);
+            out << "Percent Good" << ",";
+            out << "Mean Squared Error" << "," << endl;
+            out << pg << ",";
+            out << mse << "," << endl;
+
+        }else{
+            qDebug() << "Something went wrong opening epoch log file";
+        }
+
+        file.close();
+    }else{
+        QFile file("../Assignment2/epoch_log.csv");
+        if(file.open(QIODevice::WriteOnly | QIODevice::Append)){
+            QTextStream out(&file);
+            out << pg << ",";
+            out << mse << "," << endl;
+
+        }else{
+            qDebug() << "Something went wrong opening epoch log file";
+        }
+
+        file.close();
+    }
+}
+
 void setOutputsToZero(int *outputArr, unsigned size, int letterToSet){
     for(unsigned i = 0; i < size; i++){
         outputArr[i] = 0;
@@ -630,6 +660,8 @@ void MainWindow::on_pushButton_Train_Network_Max_Epochs_clicked()
     double SSE = 0.0;
     QString msg;
 
+    double percent_good;
+
     if(!patternsLoadedFromFile) {
         msg.clear();
         msg.append("\nMissing training patterns.  Load data set first.\n");
@@ -646,14 +678,18 @@ void MainWindow::on_pushButton_Train_Network_Max_Epochs_clicked()
       msg.append("\nEpoch=");
       msg.append(QString::number(i));
       ui->plainTextEdit_results->setPlainText(msg);
-      qApp->processEvents();
 
       SSE = bp->trainNetwork(1);
+      double pg = bp->getError_PG();
+      double mse = bp->getError_MSE();
+
       ui->lcdNumber_SSE->display(bp->getError_SSE());
-      ui->lcdNumber_MSE->display(bp->getError_MSE());
-      ui->lcdNumber_percentageOfGoodClassification->display(bp->getError_PG());
+      ui->lcdNumber_MSE->display(QString::number(mse));
       ui->lcdNumber_Correct->display(bp->getCorrect());
+      ui->lcdNumber_percentageOfGoodClassification->display(QString::number(pg));
       qApp->processEvents();
+
+      logEpochInfoToFile(i, pg, mse);
 
       update();
 
@@ -662,6 +698,12 @@ void MainWindow::on_pushButton_Train_Network_Max_Epochs_clicked()
 
          ui->plainTextEdit_results->setPlainText("Weights saved into file.");
          qApp->processEvents();
+      }
+
+      if(pg > ui->doubleSpinBox_percent_good->value()){
+          bp->saveWeights(ui->plainTextEdit_saveWeightsAs->toPlainText());
+          ui->plainTextEdit_results->setPlainText("Weights saved into file.");
+          break;
       }
 
     }
@@ -790,6 +832,17 @@ void MainWindow::on_pushButton_Test_All_Patterns_clicked()
 
 
       qDebug() << "TEST SET: correctClassifications = " << correctClassifications;
+
+      double correctPercent;
+      correctPercent = 100.0 * (double(correctClassifications)/double(NUMBER_OF_TEST_PATTERNS));
+
+      QString s;
+      s.append("Correct Classifications: ");
+      s.append(QString::number(correctClassifications));
+      s.append("\t Percent Correct: ");
+      s.append(QString::number(correctPercent));
+
+      ui->lineEdit_test_result->setText(s.toUtf8().constData());
 
 }
 
@@ -932,6 +985,17 @@ void MainWindow::on_pushButton_testNetOnTrainingSet_clicked()
 
         }
       qDebug() << "TRAINING SET: correctClassifications = " << correctClassifications;
+
+      double correctPercent;
+      correctPercent = 100.0 * (double(correctClassifications)/double(NUMBER_OF_TRAINING_PATTERNS));
+
+      QString s;
+      s.append("Correct Classifications: ");
+      s.append(QString::number(correctClassifications));
+      s.append("\t Percent Correct: ");
+      s.append(QString::number(correctPercent));
+
+      ui->lineEdit_training_result->setText(s.toUtf8().constData());
 }
 
 void MainWindow::on_horizScrollBar_LearningRate_actionTriggered(int action)
