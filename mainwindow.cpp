@@ -359,13 +359,10 @@ void MainWindow::on_pushButton_Read_File_clicked()
             msg.append(lineOfData);
             lineOfData.sprintf("number of patterns for Letter Z = %d\n", counterForLetter[LETTER_Z]);
             msg.append(lineOfData);
-
-            ui->plainTextEdit_results->setPlainText(msg);
-            qApp->processEvents();
         }
-
         i++;
     }
+    qApp->processEvents();
 
     msg.append("done.");
 
@@ -651,12 +648,9 @@ void MainWindow::on_pushButton_Train_Network_Max_Epochs_clicked()
 
       SSE = bp->trainNetwork(1);
       ui->lcdNumber_SSE->display(bp->getError_SSE());
-      qApp->processEvents();
-      ui->lcdNumber_RMSE->display(bp->getError_RMSE());
-      qApp->processEvents();
       ui->lcdNumber_MSE->display(bp->getError_MSE());
-      qApp->processEvents();
       ui->lcdNumber_percentageOfGoodClassification->display(bp->getError_PG());
+      ui->lcdNumber_Correct->display(bp->getCorrect());
       qApp->processEvents();
 
       update();

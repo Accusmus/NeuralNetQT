@@ -34,8 +34,8 @@ public:
     void assignRandomWeights( void );
     double trainNetwork(int NUMBER_OF_DESIRED_EPOCHS);
     double getError_SSE();
-    double getError_RMSE();
     double getError_MSE();
+    double getCorrect();
     double getError_PG();
     int action( double *vector );
     double* testNetwork(LetterStructure testPattern);
@@ -60,8 +60,14 @@ private:
     double erro[OUTPUT_NEURONS];
     double errh[HIDDEN_NEURONS];
 
+    void resetConfusionMatrix();
+    void printConfusionMatrix();
+
     //-----------------------------------------
-    double sse, rmse, mse, mae, pgood;
+    double sse, mse, percentCorrect, pgood;
+
+    int confusionMatrix[OUTPUT_NEURONS][OUTPUT_NEURONS]; //x array is actual y direction is expected
+
     int i, sample, iterations;
     int sum;
 };

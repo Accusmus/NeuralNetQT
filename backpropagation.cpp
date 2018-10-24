@@ -23,14 +23,15 @@ Backpropagation::Backpropagation()
 void Backpropagation::initialise()
 {
     sse=0;
-    rmse=0;
     mse=0;
-    mae=0;
+    percentCorrect=0;
     pgood=0;
     sample=0;
     iterations=0;
     sum = 0;
 
+
+   resetConfusionMatrix();
 
     /* Seed the random number generator */
     srand( time(NULL) );
@@ -42,16 +43,51 @@ double Backpropagation::getError_SSE(){
     return sse;
 }
 
-double Backpropagation::getError_RMSE(){
-    return rmse;
-}
-
 double Backpropagation::getError_MSE(){
     return mse;
 }
 
+double Backpropagation::getCorrect(){
+    return percentCorrect;
+}
 double Backpropagation::getError_PG(){
     return pgood;
+}
+
+void Backpropagation::resetConfusionMatrix(){
+    for(int i = 0; i < OUTPUT_NEURONS; i++){
+        for(int j = 0; j < OUTPUT_NEURONS; j++){
+            confusionMatrix[i][j] = 0;
+        }
+    }
+}
+
+void Backpropagation::printConfusionMatrix(){
+
+    QFile file4("../Assignment2/confusion_matrix.csv");
+    file4.open(QIODevice::WriteOnly | QIODevice::Text);
+
+    QTextStream out4(&file4);
+
+    for(int i = 0; i < OUTPUT_NEURONS + 1; i++){
+        if(i == 0){
+            out4 << " ,";
+        }else{
+            out4 << char(65+(i-1)) << ",";
+        }
+    }
+    out4 << '\n';
+
+    for(int i = 0; i < OUTPUT_NEURONS; i++){
+        out4 << char(i+65);
+        out4 << ",";
+        for(int j = 0; j < OUTPUT_NEURONS; j++){
+            out4 << QString::number(confusionMatrix[i][j]) + ", ";
+        }
+        out4 << '\n';
+    }
+
+    file4.close();
 }
 
 
@@ -356,7 +392,7 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
     //initialise error counters
     sse = 0.0;
     mse = 0.0;
-
+    float correct, correctGood;
     while (1) {
         if (++sample == NUMBER_OF_TRAINING_PATTERNS) {
             sample = 0;
@@ -377,21 +413,48 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
 
         /* need to iterate through all ... */
 
-
+        double max = -10000;
+        int kval = 0, trueVal = 0;
         for (int k = 0 ; k < OUTPUT_NEURONS ; k++) {
             sse += sqr( (letters[sample].outputs[k] - actual[k]));
             mse += (letters[sample].outputs[k] - actual[k]) * (letters[sample].outputs[k] - actual[k]);
+            if(max < actual[k]){
+                max = actual[k];
+                kval = k;
+            }
+            if(letters[sample].outputs[k] == 1){
+                trueVal = k;
+            }
         }
+
+        //correct prediciton
+        if(letters[sample].outputs[kval] == 1.0){
+            correct++;
+            if(actual[kval] >= 0.6){
+                correctGood++;
+            }
+
+
+        }
+
+        confusionMatrix[kval][trueVal] += 1;
 
         sse = 0.5 * sse;
         mse = (1/(sample+1)) * mse;
+        percentCorrect = correct / NUMBER_OF_TRAINING_PATTERNS;
+        pgood = correctGood / NUMBER_OF_TRAINING_PATTERNS;
 
 
         accumulatedSSE = accumulatedSSE + sse;
 
+        if(sample == 1){
+            correct = 0;
+            correctGood = 0;
+            printConfusionMatrix();
+            resetConfusionMatrix();
+        }
 
         if(epochs > NUMBER_OF_DESIRED_EPOCHS) {
-
             break;
         }
 
