@@ -185,6 +185,10 @@ void MainWindow::on_pushButton_Read_File_clicked()
         in >> characterSymbol >> t >> letters[i].f[0] >> t >>  letters[i].f[1] >> t >>  letters[i].f[2] >> t >>  letters[i].f[3] >> t >>  letters[i].f[4] >> t >>  letters[i].f[5] >> t >>  letters[i].f[6] >> t >>  letters[i].f[7] >> t >>  letters[i].f[8] >> t >>  letters[i].f[9] >> t >>  letters[i].f[10] >> t >>  letters[i].f[11] >> t >> letters[i].f[12] >> t >> letters[i].f[13] >> t >> letters[i].f[14] >> t >> letters[i].f[15];
         line = in.readLine();
 
+//        for(int i = 0; i < 16; i++){
+//            letters[i].f[i] = letters[i].f[i]/16;
+//        }
+
         if(characterSymbol == 'A'){
             letters[i].symbol = LETTER_A;
             setOutputsToZero(letters[i].outputs, 26, LETTER_A);
@@ -694,7 +698,7 @@ void MainWindow::on_pushButton_Train_Network_Max_Epochs_clicked()
       update();
 
       if(i % 5 ==0){
-         bp->saveWeights(ui->plainTextEdit_saveWeightsAs->toPlainText());
+         bp->saveWeights("../Assignment2/data/" + ui->plainTextEdit_saveWeightsAs->toPlainText());
 
          ui->plainTextEdit_results->setPlainText("Weights saved into file.");
          qApp->processEvents();
@@ -863,7 +867,7 @@ void MainWindow::on_pushButton_Save_Weights_clicked()
 
 void MainWindow::on_pushButton_Load_Weights_clicked()
 {
-   bp->loadWeights(ui->plainTextEdit_fileNameLoadWeights->toPlainText());
+   bp->loadWeights("../Assignment2/data/" + ui->plainTextEdit_fileNameLoadWeights->toPlainText());
 
    QString msg;
 

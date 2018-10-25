@@ -91,85 +91,6 @@ void Backpropagation::logConfusionMatrixToFile(){
 }
 
 
-//////for debugging - very good
-//void Backpropagation::saveWeights(){
-//    int out, hid, inp;
-
-//    QFile file3("weights.txt");
-//    file3.open(QIODevice::WriteOnly | QIODevice::Text);
-
-//    QTextStream out3(&file3);
-
-//    char tempBuffer3[80];
-//    QByteArray temp3;
-
-//    //----------------------------------------------
-//    // weights
-//    //
-
-//    qDebug() << "updating weights...";
-//    qDebug() << "OUTPUT_NEURONS = " << OUTPUT_NEURONS;
-//    qDebug() << "HIDDEN_NEURONS = " << HIDDEN_NEURONS;
-//    qDebug() << "INPUT_NEURONS = " << INPUT_NEURONS;
-
-//    // Update the weights for the output layer (step 4 for output cell)
-//    for (out = 0 ; out < OUTPUT_NEURONS ; out++) {
-//      temp3.clear();
-//      for (hid = 0 ; hid < HIDDEN_NEURONS ; hid++) {
-//          //---save------------------------------------
-
-
-//            ::sprintf(tempBuffer3,"who[%d][%d]=%f , ",hid,out,who[hid][out]);
-//            temp3.append(tempBuffer3);
-
-//          //---------------------------------------
-//      }
-
-//      // Update the Bias
-//      //---save------------------------------------
-//        ::sprintf(tempBuffer3,"who[%d][%d]=%f",HIDDEN_NEURONS,out,who[HIDDEN_NEURONS][out]);
-//        temp3.append(tempBuffer3);
-//        temp3.append("\n");
-//        out3 << temp3;
-
-//      //---------------------------------------
-
-//    }
-
-//    // Update the weights for the hidden layer (step 4 for hidden cell)
-//    for (hid = 0 ; hid < HIDDEN_NEURONS ; hid++) {
-//      temp3.clear();
-//      for (inp = 0 ; inp < INPUT_NEURONS ; inp++) {
-
-//        //---save------------------------------------
-
-
-//          ::sprintf(tempBuffer3,"wih[%d][%d]=%f , ",inp,hid,wih[inp][hid]);
-//          temp3.append(tempBuffer3);
-
-//        //---------------------------------------
-//      }
-
-//      // Update the Bias
-//      //---save------------------------------------
-//        ::sprintf(tempBuffer3,"wih[%d][%d]=%f",INPUT_NEURONS,hid,wih[INPUT_NEURONS][hid]);
-//        temp3.append(tempBuffer3);
-//        temp3.append("\n");
-//        out3 << temp3;
-
-//      //---------------------------------------
-
-//    }
-
-//    //----------------------------------------------
-
-
-//    file3.close();
-//    qDebug() << "Weights saved to file.";
-//}
-
-
-
 void Backpropagation::saveWeights(QString fileName){
     int out, hid, inp;
 
@@ -194,24 +115,15 @@ void Backpropagation::saveWeights(QString fileName){
     for (out = 0 ; out < OUTPUT_NEURONS ; out++) {
       temp3.clear();
       for (hid = 0 ; hid < HIDDEN_NEURONS ; hid++) {
-          //---save------------------------------------
-
-
             ::sprintf(tempBuffer3,"%f,",who[hid][out]);
             temp3.append(tempBuffer3);
-
-          //---------------------------------------
       }
-
       // Update the Bias
       //---save------------------------------------
         ::sprintf(tempBuffer3,"%f",who[HIDDEN_NEURONS][out]);
         temp3.append(tempBuffer3);
         temp3.append("\n");
         out3 << temp3;
-
-      //---------------------------------------
-
     }
 
     // Update the weights for the hidden layer (step 4 for hidden cell)
@@ -220,11 +132,8 @@ void Backpropagation::saveWeights(QString fileName){
       for (inp = 0 ; inp < INPUT_NEURONS ; inp++) {
 
         //---save------------------------------------
-
-
           ::sprintf(tempBuffer3,"%f,",wih[inp][hid]);
           temp3.append(tempBuffer3);
-
         //---------------------------------------
       }
 
@@ -234,13 +143,10 @@ void Backpropagation::saveWeights(QString fileName){
         temp3.append(tempBuffer3);
         temp3.append("\n");
         out3 << temp3;
-
       //---------------------------------------
-
     }
 
     //----------------------------------------------
-
 
     file3.close();
     qDebug() << "Weights saved to file.";
@@ -248,92 +154,40 @@ void Backpropagation::saveWeights(QString fileName){
 
 
 void Backpropagation::loadWeights(QString fileName){
-    int out, hid, inp;
 
-    QFile file3(fileName);
-    file3.open(QIODevice::ReadOnly | QIODevice::Text);
-
-    if(!file3.exists()){
-        qDebug() << "Backpropagation::loadWeights-file does not exist!";
-        return;
-    }
-
-    QTextStream in(&file3);
-
-    char tChar;
-    char tempBuffer3[1000000];
-    QByteArray temp3;
-
-    //----------------------------------------------
-    // weights
-    //
-
-    QString strLine;
-    //QTextStream streamLine;
-
-
+    QFile file(fileName);
 
     qDebug() << "loading weights...";
     qDebug() << "OUTPUT_NEURONS = " << OUTPUT_NEURONS;
     qDebug() << "HIDDEN_NEURONS = " << HIDDEN_NEURONS;
     qDebug() << "INPUT_NEURONS = " << INPUT_NEURONS;
 
-    // Update the weights for the output layer (step 4 for output cell)
-    for (out = 0 ; out < OUTPUT_NEURONS ; out++) {
-      strLine = in.readLine();
-      QTextStream streamLine(&strLine);
-
-      for (hid = 0 ; hid <= HIDDEN_NEURONS ; hid++) {
-          //---load------------------------------------
-
-            if(hid != HIDDEN_NEURONS-1){
-               streamLine >> who[hid][out] >> tChar;
-            } else {
-               streamLine >> who[hid][out];
-            }
-
-
-          //---------------------------------------
-      }
-
-      // Update the Bias
-      //---load------------------------------------
-
-        streamLine >> who[HIDDEN_NEURONS][out];// >> tChar;
-
-
-      //---------------------------------------
-
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        qDebug() << "Error weights file does not exist!";
+        return;
     }
 
-    /* Update the weights for the hidden layer (step 4 for hidden cell) */
-    for (hid = 0 ; hid < HIDDEN_NEURONS ; hid++) {
+    QTextStream in(&file);
+    QString line;
 
-      for (inp = 0 ; inp < INPUT_NEURONS ; inp++) {
-
-        //---load------------------------------------
-          if(hid != INPUT_NEURONS-1){
-             in >> wih[inp][hid] >> tChar;
-          } else {
-             in >> wih[inp][hid];
-          }
-
-        //---------------------------------------
-      }
-
-      // Update the Bias
-      //---load------------------------------------
-        in >> wih[INPUT_NEURONS][hid] >> tChar;
-
-      //---------------------------------------
-
+    for(int out = 0; out < OUTPUT_NEURONS; out++){
+        line = in.readLine();
+        QStringList stringList = line.split(",");
+        for(int hid = 0; hid <= HIDDEN_NEURONS; hid++){
+            who[hid][out] = stringList[hid].toDouble();
+        }
     }
 
-    //----------------------------------------------
+    for(int hid = 0; hid < HIDDEN_NEURONS; hid++){
+        line = in.readLine();
+        QStringList stringList = line.split(",");
+        for(int inp = 0; inp <= INPUT_NEURONS; inp++){
+            wih[inp][hid] = stringList[inp].toDouble();
+        }
+    }
 
-
-    file3.close();
-    qDebug() << "Weights loaded.";
+    file.close();
+    qDebug() << "Weights Loaded!";
 }
 
 int Backpropagation::action( double *vector )
@@ -440,6 +294,7 @@ double Backpropagation::trainNetwork(int NUMBER_OF_DESIRED_EPOCHS)
         confusionMatrix[kval][trueVal] += 1;
 
         sse = 0.5 * sse;
+
         mse = (1/(sample+1)) * mse;
         percentCorrect = correct / NUMBER_OF_TRAINING_PATTERNS;
         pgood = correctGood / NUMBER_OF_TRAINING_PATTERNS;
@@ -510,6 +365,17 @@ double Backpropagation::softmax(double val, double total)
     return (exp(val)/total);
 }
 
+double Backpropagation::reluActivation(double val){
+    if(val > 0){
+        return val;
+    }
+    return 0;
+}
+
+double Backpropagation::tanhActivation(double val){
+    return ((exp(val) - exp(-val)) / (exp(val) + exp(-val)));
+}
+
 
 /*
  *  sigmoidDerivative()
@@ -523,8 +389,17 @@ double Backpropagation::sigmoidDerivative( double val )
   return ( val * (1.0 - val) );
 }
 
+double Backpropagation::reluDerivative(double val){
+    if(val > 0){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
-
+double Backpropagation::tanhDerivative(double val){
+    return 1 - pow(tanhActivation(val),2);
+}
 
 /*
  *  feedForward()
@@ -550,6 +425,8 @@ void Backpropagation::feedForward( )
     sum += wih[INPUT_NEURONS][hid];
 
     hidden[hid] = sigmoid( sum );
+    //hidden[hid] = reluActivation(sum);
+    //hidden[hid] = tanhActivation(sum);
 
   }
   float total = 0;
@@ -568,6 +445,8 @@ void Backpropagation::feedForward( )
     total += exp(sum);
     sums[out] = sum;
     //actual[out] = sigmoid( sum );
+    //actual[out] = reluActivation(sum);
+    //actual[out] = tanhActivation(sum);
 
   }
   for(int i = 0; i < OUTPUT_NEURONS; i++){
@@ -589,7 +468,7 @@ void Backpropagation::backPropagate( void )
 
   /* Calculate the output layer error (step 3 for output cell) */
   for (out = 0 ; out < OUTPUT_NEURONS ; out++) {
-    erro[out] = (target[out] - actual[out]) * sigmoidDerivative( actual[out] );
+    erro[out] = (target[out] - actual[out]) * sigmoidDerivative(actual[out]);
   }
 
   /* Calculate the hidden layer error (step 3 for hidden cell) */
@@ -601,6 +480,8 @@ void Backpropagation::backPropagate( void )
     }
 
     errh[hid] *= sigmoidDerivative( hidden[hid] );
+    //errh[hid] *= reluDerivative(hidden[hid]);
+    //errh[hid] *= tanhDerivative(hidden[hid]);
 
   }
 

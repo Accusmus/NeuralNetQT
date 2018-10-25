@@ -29,8 +29,12 @@ public:
     void feedForward( );
     void backPropagate();
     double sigmoid( double val );
+    double reluActivation(double val);
+    double tanhActivation(double val);
     double softmax(double val, double total);
     double sigmoidDerivative( double val );
+    double reluDerivative(double val);
+    double tanhDerivative(double val);
     void assignRandomWeights( void );
     double trainNetwork(int NUMBER_OF_DESIRED_EPOCHS);
     double getError_SSE();
